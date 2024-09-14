@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryNilaiResource\Pages;
-use App\Filament\Resources\CategoryNilaiResource\RelationManagers;
-use App\Models\CategoryNilai;
+use App\Filament\Resources\ClassroomResource\Pages;
+use App\Filament\Resources\ClassroomResource\RelationManagers;
+use App\Models\Classroom;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -19,27 +18,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class CategoryNilaiResource extends Resource
+class ClassroomResource extends Resource
 {
-    protected static ?string $model = CategoryNilai::class;
+    protected static ?string $model = Classroom::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?int $navigationSort = 3;
-
-
-    // custom label di navigasi sidbar
-    // protected static ?string $navigationLabel = 'Category Nilai';
 
     // custom label singular
     public static function getModelLabel(): string
     {
-        return 'Kategori Nilai';
+        return 'Kelas';
     }
     // custom label model plural
     public static function getPluralModelLabel(): string
     {
-        return 'Daftar Kategori Nilai';
+        return 'Daftar Kelas';
     }
 
     public static function form(Form $form): Form
@@ -61,15 +54,14 @@ class CategoryNilaiResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                TextColumn::make('name')->label('Nama'),
+                TextColumn::make('slug')->label('Slug'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -78,10 +70,19 @@ class CategoryNilaiResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCategoryNilais::route('/'),
+            'index' => Pages\ListClassrooms::route('/'),
+            'create' => Pages\CreateClassroom::route('/create'),
+            'edit' => Pages\EditClassroom::route('/{record}/edit'),
         ];
     }
 }

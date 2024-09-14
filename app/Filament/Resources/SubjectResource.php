@@ -2,11 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryNilaiResource\Pages;
-use App\Filament\Resources\CategoryNilaiResource\RelationManagers;
-use App\Models\CategoryNilai;
+use App\Filament\Resources\SubjectResource\Pages;
+use App\Filament\Resources\SubjectResource\RelationManagers;
+use App\Models\Subject;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -19,34 +18,29 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class CategoryNilaiResource extends Resource
+class SubjectResource extends Resource
 {
-    protected static ?string $model = CategoryNilai::class;
+    protected static ?string $model = Subject::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?int $navigationSort = 3;
-
-
-    // custom label di navigasi sidbar
-    // protected static ?string $navigationLabel = 'Category Nilai';
-
-    // custom label singular
-    public static function getModelLabel(): string
-    {
-        return 'Kategori Nilai';
-    }
-    // custom label model plural
-    public static function getPluralModelLabel(): string
-    {
-        return 'Daftar Kategori Nilai';
-    }
+     // custom label singular
+     public static function getModelLabel(): string
+     {
+         return 'Mapel';
+     }
+     // custom label model plural
+     public static function getPluralModelLabel(): string
+     {
+         return 'Daftar Mapel';
+     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Section::make()->schema([
+                    TextInput::make('kode')->label('Kode')->required(),
                     TextInput::make('name')
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state)))
@@ -61,8 +55,9 @@ class CategoryNilaiResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                    TextColumn::make('kode')->label('Kode'),
+                    TextColumn::make('name')->label('Nama'),
+                    TextColumn::make('slug')->label('Slug'),
             ])
             ->filters([
                 //
@@ -81,7 +76,7 @@ class CategoryNilaiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCategoryNilais::route('/'),
+            'index' => Pages\ManageSubjects::route('/'),
         ];
     }
 }

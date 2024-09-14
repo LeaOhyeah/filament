@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryNilaiResource\Pages;
-use App\Filament\Resources\CategoryNilaiResource\RelationManagers;
-use App\Models\CategoryNilai;
+use App\Filament\Resources\DepartmentResource\Pages;
+use App\Filament\Resources\DepartmentResource\RelationManagers;
+use App\Models\Department;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -19,27 +19,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
-class CategoryNilaiResource extends Resource
+class DepartmentResource extends Resource
 {
-    protected static ?string $model = CategoryNilai::class;
+    protected static ?string $model = Department::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?int $navigationSort = 3;
-
-
-    // custom label di navigasi sidbar
-    // protected static ?string $navigationLabel = 'Category Nilai';
 
     // custom label singular
     public static function getModelLabel(): string
     {
-        return 'Kategori Nilai';
+        return 'Department';
     }
     // custom label model plural
     public static function getPluralModelLabel(): string
     {
-        return 'Daftar Kategori Nilai';
+        return 'Daftar Department';
     }
 
     public static function form(Form $form): Form
@@ -47,12 +41,13 @@ class CategoryNilaiResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
-                    TextInput::make('name')
+                    TextInput::make('name_department')
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn(Set $set, ?string $state) => $set('slug', Str::slug($state)))
                         ->label('Nama')
                         ->required(),
                     TextInput::make('slug')->label('Slug'),
+                    Textarea::make('description')->label('deskripsi')->required(),
                 ])
             ]);
     }
@@ -61,8 +56,10 @@ class CategoryNilaiResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                TextColumn::make('slug'),
+                TextColumn::make('name_department')->label('Nama'),
+                    TextColumn::make('slug')->label('Slug'),
+                    TextColumn::make('description')->label('deskripsi')
+                    ->limit(50),
             ])
             ->filters([
                 //
@@ -81,7 +78,7 @@ class CategoryNilaiResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageCategoryNilais::route('/'),
+            'index' => Pages\ManageDepartments::route('/'),
         ];
     }
 }
